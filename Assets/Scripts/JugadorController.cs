@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 // Agregamos
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class JugadorController : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class JugadorController : MonoBehaviour
     private int contador;
 
     //Inicializo variables para los textos
-    public TextMeshProUGUI textoContador, textoGanar;
+    public TextMeshProUGUI textoContador,
+        textoGanar;
 
     //Declaro la variable pública velocidad para poder modificarla desde la Inspector window
     public float velocidad;
@@ -46,6 +48,14 @@ public class JugadorController : MonoBehaviour
 
         //Asigno ese movimiento o desplazamiento a mi RigidBody, multiplicado por la velocidad que quiera darle
         rb.AddForce(movimiento * velocidad);
+
+        // Reiniciar nivel con tecla R
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(
+                UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
+            );
+        }
     }
 
     //Se ejecuta al entrar a un objeto con la opción isTrigger seleccionada
@@ -71,7 +81,15 @@ public class JugadorController : MonoBehaviour
 
         if (contador >= 12)
         {
-            textoGanar.text = "¡Ganaste!";
+            textoGanar.text = "¡GANASTE!";
+            StartCoroutine(VolverAlMenu());
         }
+    }
+
+    // Se ejecuta después de ganar para volver al menú
+    IEnumerator VolverAlMenu()
+    {
+        yield return new WaitForSeconds(5);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
     }
 }
