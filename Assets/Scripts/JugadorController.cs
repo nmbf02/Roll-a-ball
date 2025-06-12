@@ -104,16 +104,18 @@ public class JugadorController : MonoBehaviour
         {
             textoGanar.text = "¡GANASTE!";
             haGanado = true;
-            // Desactiva el temporizador al ganar
-            StartCoroutine(VolverAlMenu());
-        }
-    }
 
-    // Se ejecuta después de ganar para volver al menú
-    IEnumerator VolverAlMenu()
-    {
-        yield return new WaitForSeconds(5);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+            if (SceneManager.GetActiveScene().name == "Nivel10")
+            {
+                // Si estamos en el último nivel, volver al menú
+                StartCoroutine(VolverAlMenu());
+            }
+            else
+            {
+                // Si no, pasar al siguiente nivel
+                StartCoroutine(PasarAlSiguienteNivel());
+            }
+        }
     }
 
     // Se ejecuta después de perder por tiempo para volver al menú
@@ -121,5 +123,19 @@ public class JugadorController : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+    }
+
+    // Se ejecuta después de ganar para volver al menú o pasar al siguiente nivel
+    IEnumerator VolverAlMenu()
+    {
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene("Menu");
+    }
+
+    // Se ejecuta después de ganar para pasar al siguiente nivel
+    IEnumerator PasarAlSiguienteNivel()
+    {
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
