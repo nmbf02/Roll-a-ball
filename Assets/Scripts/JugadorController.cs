@@ -20,6 +20,12 @@ public class JugadorController : MonoBehaviour
     //Declaro la variable pública velocidad para poder modificarla desde la Inspector window
     public float velocidad;
 
+    public TextMeshProUGUI textoTimer;
+
+    // Inicializo el tiempo restante y la variable de victoria
+    private float tiempoRestante = 120f;
+    private bool haGanado = false;
+
     // Use this for initialization
     void Start()
     {
@@ -56,6 +62,21 @@ public class JugadorController : MonoBehaviour
                 UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
             );
         }
+
+        if (!haGanado)
+        {
+            tiempoRestante -= Time.deltaTime;
+
+            int minutos = Mathf.FloorToInt(tiempoRestante / 60);
+            int segundos = Mathf.FloorToInt(tiempoRestante % 60);
+            textoTimer.text = "Tiempo: " + minutos.ToString("00") + ":" + segundos.ToString("00");
+
+            if (tiempoRestante <= 0)
+            {
+                textoTimer.text = "¡Tiempo agotado!";
+                StartCoroutine(PerderPorTiempo());
+            }
+        }
     }
 
     //Se ejecuta al entrar a un objeto con la opción isTrigger seleccionada
@@ -82,6 +103,8 @@ public class JugadorController : MonoBehaviour
         if (contador >= 12)
         {
             textoGanar.text = "¡GANASTE!";
+            haGanado = true;
+            // Desactiva el temporizador al ganar
             StartCoroutine(VolverAlMenu());
         }
     }
@@ -90,6 +113,13 @@ public class JugadorController : MonoBehaviour
     IEnumerator VolverAlMenu()
     {
         yield return new WaitForSeconds(5);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+    }
+
+    // Se ejecuta después de perder por tiempo para volver al menú
+    IEnumerator PerderPorTiempo()
+    {
+        yield return new WaitForSeconds(3);
         UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
     }
 }
