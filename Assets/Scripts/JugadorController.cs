@@ -93,6 +93,12 @@ public class JugadorController : MonoBehaviour
             //Actualizo el texto del contador
             setTextoContador();
         }
+        else if (other.gameObject.CompareTag("Obstaculo"))
+        {
+            textoGanar.text = "¡Perdiste!";
+            haGanado = true;
+            StartCoroutine(VolverAlMenu()); // o puedes crear otra coroutine llamada Perder()
+        }
     }
 
     //Actualizo el texto del contador (O muestro el de ganar si las ha cogido todas)
